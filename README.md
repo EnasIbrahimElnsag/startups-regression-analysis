@@ -170,7 +170,9 @@ Each model includes an **Actual vs. Predicted scatter plot** to visually assess 
 4. Open and run `Startups_Regression.ipynb` cell by cell in Jupyter Notebook or JupyterLab
 
 ---
-
-## 👩‍💻 Author
-
-This project was built as a regression analysis study comparing multiple ML algorithms on real-world startup data.
+## Developed by  
+* Enas Ibrahim Ali Elnsag
+* Malak Tamer Mohamed Ali
+* Salma Amer Ahmed Abdel Fattah
+* Fatma Mohamed Helmy Mohamed
+* Mariem Medhet Afifi
