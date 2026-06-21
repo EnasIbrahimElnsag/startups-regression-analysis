@@ -1,214 +1,123 @@
-# 📊 Startup Profit Prediction — Regression Analysis & ML Application
+# 📊 Startup Profit Prediction — Regression Analysis
 
-A complete machine learning project that applies and compares three regression techniques — **Simple Linear Regression**, **Multiple Linear Regression**, and **Polynomial Regression** — to predict startup profits based on spending data.
+> A complete Machine Learning project that predicts startup profit based on different spending factors using Regression models.
+> Developed as part of the Machine Learning course, where different regression algorithms were implemented and compared to select the best performing model.
 
-The project also includes an interactive **Gradio web application** that allows users to enter startup expenses and get an instant profit prediction using the best-performing regression model.
-
----
-
-## 📁 Project Structure
-
-```
-├── Startups_Regression.ipynb   # Main Jupyter Notebook
-├── startups.csv                # Dataset
-├── model.pkl                   # Trained Multiple Linear Regression Model
-├── app.py                      # Gradio Application
-└── README.md                   # Project Documentation
-```
-
----
+\---
 
 ## 🎯 Objective
 
-The main goal of this project is to predict the **Profit** of a startup company based on its spending in:
+Predict the expected profit of a startup based on its spending across three key dimensions:
 
-- Research and Development
-- Administration
-- Marketing
+* 💰 **R\&D Spend** — Investment in research and development
+* 🏢 **Administration Spend** — Administrative and operational expenses
+* 📣 **Marketing Spend** — Marketing and advertising expenditure
 
-Different regression algorithms were trained and compared to find the best model for profit prediction.
+The project also identifies the **best-performing regression model** through systematic comparison and evaluation.
 
----
+\---
 
-## 📦 Dataset
+## 📂 Dataset
 
-The dataset (`startups.csv`) contains information about **50 startup companies** across different US states.
+The dataset contains information about **50 startups** with the following features:
 
-| Column | Description |
-|---|---|
-| `R&D Spend` | Amount spent on Research and Development |
-| `Administration` | Amount spent on Administration |
-| `Marketing Spend` | Amount spent on Marketing |
-| `State` | US State (New York / California / Florida) |
-| `Profit` | Target variable — startup profit |
+|Feature|Description|
+|-|-|
+|R\&D Spend|Investment in research and development|
+|Administration Spend|Administrative expenses|
+|Marketing Spend|Marketing and advertising expenses|
+|State|Location of the startup|
+|**Profit**|🎯 Target variable — the value to predict|
 
----
+\---
 
-## 🛠️ Libraries Used
+## 🔄 Project Workflow
 
-```python
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+### 1\. Data Preprocessing
 
-from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import LabelEncoder, PolynomialFeatures
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
+* ✅ Checked for missing values
+* ✅ Checked for duplicate records
+* ✅ Encoded categorical features (State column)
+* ✅ Split data into training and test sets
 
-import gradio as gr
-import joblib
-```
+### 2\. Exploratory Data Analysis
 
----
+* 📊 Correlation analysis between features and target variable
+* 📈 Distribution analysis of spending features
+* 🔍 Feature relationship visualization (scatter plots \& heatmaps)
 
-## 🔄 Workflow
-
-### 1. Data Loading & Understanding
-- Loaded the dataset using pandas
-- Checked dataset shape
-- Explored data types and statistical information using `.info()` and `.describe()`
-
-### 2. Data Preprocessing
-
-✅ Missing values checking  
-✅ Duplicate records checking  
-✅ Encoding categorical variable `State` using `LabelEncoder`
-
-### 3. Exploratory Data Analysis (EDA)
-
-The following visualizations were created:
-
-- Correlation Heatmap
-- Boxplot
-- Histogram
-- Pairplot
-
-> **Key observation:** R&D Spend showed the strongest correlation with Profit.
-
----
+\---
 
 ## 🤖 Machine Learning Models
 
-Three regression models were trained:
+The following regression models were implemented, trained, and compared:
 
-### 🔹 Simple Linear Regression
+|#|Model|
+|-|-|
+|1|Simple Linear Regression|
+|2|Multiple Linear Regression|
+|3|Polynomial Regression|
 
-Uses only **R&D Spend** to predict Profit.
+\---
 
-```
-Profit = b0 + b1 × R&D Spend
-```
+## 📈 Model Evaluation
 
-### 🔹 Multiple Linear Regression
+Models were evaluated using three standard regression metrics:
 
-Uses **R&D Spend**, **Administration**, and **Marketing Spend** to predict Profit.
+* **R² Score** — Proportion of variance explained by the model
+* **MSE** — Mean Squared Error
+* **MAE** — Mean Absolute Error
 
-```
-Profit = b0 + b1(R&D) + b2(Admin) + b3(Marketing)
-```
+### Results
 
-### 🔹 Polynomial Regression
+|Model|R² Score|MSE|MAE|
+|-|-|-|-|
+|Simple Linear Regression|0.9407|\~$4.2M|\~$2.8M|
+|**Multiple Linear Regression** ✅|**0.9453**|**\~$4.1M**|**\~$2.7M**|
+|Polynomial Regression|0.9410|\~$5.8M|\~$3.9M|
 
-Polynomial transformation applied with degree = 2 to capture possible non-linear relationships.
+> 🏆 \*\*Best Model: Multiple Linear Regression\*\* — achieved the best overall performance with balanced R² Score and lowest prediction error.
 
-```
-Profit = b0 + b1(R&D) + b2(R&D)²
-```
+\---
 
----
+## 🚀 Interactive Application
 
-## 📊 Model Comparison
+A **Gradio-powered** web application was developed to make the model accessible:
 
-| Model | Performance |
-|---|---|
-| Simple Linear Regression | Good performance |
-| Multiple Linear Regression | ⭐ Best overall model |
-| Polynomial Regression | Similar performance |
+* 🖊️ Users input spending values for R\&D, Administration, and Marketing
+* ⚡ The trained Multiple Linear Regression model processes inputs in real time
+* 💡 Expected profit is instantly displayed as output
+* 🌐 Deployed on Hugging Face Spaces for public access
 
-### 🏆 Best Model
+### 🔗 Live Demo
 
-The **Multiple Linear Regression** model achieved the best results because it uses all important spending features (R&D Spend, Administration, Marketing Spend) and achieved the best balance between prediction accuracy and error values.
+👉 *https://huggingface.co/spaces/Enasibrahim/startup-profit-prediction*
 
----
+\---
 
-## 📈 Evaluation Metrics
+## 🛠️ Technologies Used
 
-| Metric | Description | Goal |
-|---|---|---|
-| **R² Score** | Measures how well the model explains profit variation | Higher is better |
-| **MSE** | Measures average squared prediction errors | Lower is better |
-| **MAE** | Measures average prediction error in dollars | Lower is better |
+|Library|Purpose|
+|-|-|
+|Python|Core programming language|
+|Pandas|Data loading, cleaning, and manipulation|
+|NumPy|Numerical computations|
+|Scikit-learn|Model implementation and evaluation|
+|Matplotlib|Data visualization|
+|Seaborn|Statistical data visualization|
+|Gradio|Interactive web application interface|
 
----
+\---
 
-## 🖥️ Gradio Web Application
+## 👥 Team Members
 
-An interactive web interface was created using Gradio.
+|#|Name|
+|-|-|
+|1|Enas Ibrahim Ali Elnsag|
+|2|Malak Tamer Mohamed Ali|
+|3|Salma Amer Ahmed Abdel Fattah|
+|4|Fatma Mohamed Helmy Mohamed|
+|5|Mariem Medhat Afifi|
 
-**Users can enter:**
-- 💰 Research and Development Spend
-- 🏢 Administration Expenditure
-- 📢 Marketing Expenditure
+\---
 
-Then the application predicts the expected startup profit.
-
-**Features:**
-- ✅ Simple user interface
-- ✅ Real-time prediction
-- ✅ Uses trained ML model
-- ✅ Easy interaction without coding
-
----
-
-## 🚀 How to Run
-
-### 1. Install required libraries
-
-```bash
-pip install pandas numpy matplotlib seaborn scikit-learn gradio joblib
-```
-
-### 2. Run Notebook
-
-Open `Startups_Regression.ipynb` and run all cells.
-
-### 3. Run Application
-
-```bash
-python app.py
-```
-
-A Gradio link will appear. Open it in your browser.
-
----
-
-## 🔍 Key Findings
-
-- R&D Spend is the most influential feature affecting Profit.
-- The regression models achieved strong performance.
-- Multiple Linear Regression provided the best overall prediction.
-- Spending features have more impact than the State feature.
-- The relationship between spending and profit is mostly linear.
-
----
-
-## ✅ Conclusion
-
-| Question | Answer |
-|---|---|
-| Best Model? | Multiple Linear Regression |
-| Most Important Feature? | R&D Spend |
-| Relationship Type? | Mostly Linear |
-| Deployment? | Gradio Application |
-
----
-
-## 👩‍💻 Developed by
-
-- Enas Ibrahim Ali Elnsag
-- Malak Tamer Mohamed Ali
-- Salma Amer Ahmed Abdel Fattah
-- Fatma Mohamed Helmy Mohamed
-- Mariem Medhet Afifi
