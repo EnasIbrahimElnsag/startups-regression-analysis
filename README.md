@@ -1,6 +1,8 @@
-# 📊 Startup Profit Prediction — Regression Analysis
+# 📊 Startup Profit Prediction — Regression Analysis & ML Application
 
 A complete machine learning project that applies and compares three regression techniques — **Simple Linear Regression**, **Multiple Linear Regression**, and **Polynomial Regression** — to predict startup profits based on spending data.
+
+The project also includes an interactive **Gradio web application** that allows users to enter startup expenses and get an instant profit prediction using the best-performing regression model.
 
 ---
 
@@ -9,42 +11,54 @@ A complete machine learning project that applies and compares three regression t
 ```
 ├── Startups_Regression.ipynb   # Main Jupyter Notebook
 ├── startups.csv                # Dataset
-└── README.md                   # Project documentation
+├── model.pkl                   # Trained Multiple Linear Regression Model
+├── app.py                      # Gradio Application
+└── README.md                   # Project Documentation
 ```
 
 ---
 
 ## 🎯 Objective
 
-Predict the **Profit** of a startup company based on its spending across R&D, Administration, and Marketing, and determine which regression model performs best.
+The main goal of this project is to predict the **Profit** of a startup company based on its spending in:
+
+- Research and Development
+- Administration
+- Marketing
+
+Different regression algorithms were trained and compared to find the best model for profit prediction.
 
 ---
 
 ## 📦 Dataset
 
-The dataset (`startups.csv`) contains information about **50 startups** across different US states.
+The dataset (`startups.csv`) contains information about **50 startup companies** across different US states.
 
 | Column | Description |
 |---|---|
-| `R&D Spend` | Amount spent on Research & Development |
+| `R&D Spend` | Amount spent on Research and Development |
 | `Administration` | Amount spent on Administration |
 | `Marketing Spend` | Amount spent on Marketing |
 | `State` | US State (New York / California / Florida) |
-| `Profit` | Target variable — the company's profit |
+| `Profit` | Target variable — startup profit |
 
 ---
 
 ## 🛠️ Libraries Used
 
 ```python
-import pandas as pd          # Data loading and manipulation
-import numpy as np           # Numerical computations
-import matplotlib.pyplot as plt  # Plotting and visualization
-import seaborn as sns        # Statistical visualizations
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import LabelEncoder, PolynomialFeatures
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
+
+import gradio as gr
+import joblib
 ```
 
 ---
@@ -52,99 +66,131 @@ from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 ## 🔄 Workflow
 
 ### 1. Data Loading & Understanding
-- Loaded the CSV dataset using `pandas`
-- Explored shape, data types, and statistical summaries with `.shape()`, `.describe()`, `.info()`
+- Loaded the dataset using pandas
+- Checked dataset shape
+- Explored data types and statistical information using `.info()` and `.describe()`
 
 ### 2. Data Preprocessing
-- ✅ Checked for **missing values** → None found
-- ✅ Checked for **duplicate records** → None found
-- 🔤 **Encoded categorical variable** `State` using `LabelEncoder` (New York, California, Florida → numeric)
+
+✅ Missing values checking  
+✅ Duplicate records checking  
+✅ Encoding categorical variable `State` using `LabelEncoder`
 
 ### 3. Exploratory Data Analysis (EDA)
-- **Correlation Heatmap** — revealed that `R&D Spend` has the strongest correlation with `Profit`
-- **Boxplot** — compared Profit distribution across States
-- **Histogram** — examined the distribution of Profit
-- **Pairplot** — explored relationships between all numeric features
 
-### 4. Model Building & Evaluation
-Three models were trained using a **70/30 train-test split** (`random_state=42`).
+The following visualizations were created:
+
+- Correlation Heatmap
+- Boxplot
+- Histogram
+- Pairplot
+
+> **Key observation:** R&D Spend showed the strongest correlation with Profit.
 
 ---
 
-## 🤖 Models
+## 🤖 Machine Learning Models
+
+Three regression models were trained:
 
 ### 🔹 Simple Linear Regression
-Uses **one feature** — `R&D Spend` — to predict Profit.
 
-```python
-X = df[['R&D Spend']]
-y = df['Profit']
+Uses only **R&D Spend** to predict Profit.
+
 ```
-
-**Formula:**  
-`Profit = b0 + b1 × (R&D Spend)`
-
----
+Profit = b0 + b1 × R&D Spend
+```
 
 ### 🔹 Multiple Linear Regression
-Uses **three features** — `R&D Spend`, `Administration`, `Marketing Spend` — to predict Profit.
 
-```python
-X = df[['R&D Spend', 'Administration', 'Marketing Spend']]
-y = df['Profit']
+Uses **R&D Spend**, **Administration**, and **Marketing Spend** to predict Profit.
+
+```
+Profit = b0 + b1(R&D) + b2(Admin) + b3(Marketing)
 ```
 
-**Formula:**  
-`Profit = b0 + b1×(R&D) + b2×(Admin) + b3×(Marketing)`
+### 🔹 Polynomial Regression
+
+Polynomial transformation applied with degree = 2 to capture possible non-linear relationships.
+
+```
+Profit = b0 + b1(R&D) + b2(R&D)²
+```
 
 ---
 
-### 🔹 Polynomial Regression (Degree = 2)
-Applies polynomial transformation to `R&D Spend` to capture **non-linear** relationships.
+## 📊 Model Comparison
 
-```python
-poly = PolynomialFeatures(degree=2)
-X_poly = poly.fit_transform(df[['R&D Spend']])
-```
+| Model | Performance |
+|---|---|
+| Simple Linear Regression | Good performance |
+| Multiple Linear Regression | ⭐ Best overall model |
+| Polynomial Regression | Similar performance |
 
-**Formula:**  
-`Profit = b0 + b1×(R&D) + b2×(R&D)²`
+### 🏆 Best Model
+
+The **Multiple Linear Regression** model achieved the best results because it uses all important spending features (R&D Spend, Administration, Marketing Spend) and achieved the best balance between prediction accuracy and error values.
 
 ---
 
-## 📊 Model Comparison (Results)
+## 📈 Evaluation Metrics
 
-| Model | R² Score | MSE | MAE |
-|---|---|---|---|
-| Simple Linear Regression | ~0.94 | — | — |
-| Multiple Linear Regression | ~0.94 | Lowest | Lowest |
-| Polynomial Regression (deg=2) | ~0.94 | — | — |
-
-> 📌 **Best Model:** Multiple Linear Regression achieved the best balance with the **highest R²** and **lowest MAE**, making it the most reliable predictor for this dataset.
-
-### 📈 Metrics Explained
-
-| Metric | What it measures | Better when |
+| Metric | Description | Goal |
 |---|---|---|
-| **R² Score** | How well the model explains variance in profit | Closer to **1.0** |
-| **MSE** | Average of squared prediction errors | As **low** as possible |
-| **MAE** | Average absolute prediction error (in dollars) | As **low** as possible |
+| **R² Score** | Measures how well the model explains profit variation | Higher is better |
+| **MSE** | Measures average squared prediction errors | Lower is better |
+| **MAE** | Measures average prediction error in dollars | Lower is better |
 
 ---
 
-## 📉 Visualizations
+## 🖥️ Gradio Web Application
 
-Each model includes an **Actual vs. Predicted scatter plot** to visually assess performance. Points closer to the red dashed line (perfect fit line) indicate better predictions.
+An interactive web interface was created using Gradio.
+
+**Users can enter:**
+- 💰 Research and Development Spend
+- 🏢 Administration Expenditure
+- 📢 Marketing Expenditure
+
+Then the application predicts the expected startup profit.
+
+**Features:**
+- ✅ Simple user interface
+- ✅ Real-time prediction
+- ✅ Uses trained ML model
+- ✅ Easy interaction without coding
+
+---
+
+## 🚀 How to Run
+
+### 1. Install required libraries
+
+```bash
+pip install pandas numpy matplotlib seaborn scikit-learn gradio joblib
+```
+
+### 2. Run Notebook
+
+Open `Startups_Regression.ipynb` and run all cells.
+
+### 3. Run Application
+
+```bash
+python app.py
+```
+
+A Gradio link will appear. Open it in your browser.
 
 ---
 
 ## 🔍 Key Findings
 
-1. **R&D Spend** is the most influential feature — it has the highest correlation with Profit among all features.
-2. All three models achieved an **R² score close to 0.94**, meaning they explain ~94% of the variance in profit.
-3. **Multiple Linear Regression** performs best overall by using all three spending features.
-4. **Polynomial Regression** slightly improved fit on the training set, but the relationship between R&D Spend and Profit is **mostly linear** — meaning polynomial features don't add significant value here.
-5. The `State` variable had relatively **low impact** compared to spending features.
+- R&D Spend is the most influential feature affecting Profit.
+- The regression models achieved strong performance.
+- Multiple Linear Regression provided the best overall prediction.
+- Spending features have more impact than the State feature.
+- The relationship between spending and profit is mostly linear.
 
 ---
 
@@ -152,25 +198,17 @@ Each model includes an **Actual vs. Predicted scatter plot** to visually assess 
 
 | Question | Answer |
 |---|---|
-| Which model is most accurate? | **Multiple Linear Regression** |
-| Most important feature? | **R&D Spend** |
-| Is the relationship linear? | **Yes**, mostly linear |
-| Any overfitting? | No — train and test R² scores are close |
+| Best Model? | Multiple Linear Regression |
+| Most Important Feature? | R&D Spend |
+| Relationship Type? | Mostly Linear |
+| Deployment? | Gradio Application |
 
 ---
 
-## 🚀 How to Run
+## 👩‍💻 Developed by
 
-1. Clone or download the project files
-2. Make sure you have the required libraries installed:
-   ```bash
-   pip install pandas numpy matplotlib seaborn scikit-learn
-   ```
-3. Place `startups.csv` in the same directory as the notebook
-4. Open and run `Startups_Regression.ipynb` cell by cell in Jupyter Notebook or JupyterLab
-
----
-
-## 👩‍💻 Author
-
-This project was built as a regression analysis study comparing multiple ML algorithms on real-world startup data.
+- Enas Ibrahim Ali Elnsag
+- Malak Tamer Mohamed Ali
+- Salma Amer Ahmed Abdel Fattah
+- Fatma Mohamed Helmy Mohamed
+- Mariem Medhet Afifi
